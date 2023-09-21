@@ -34,13 +34,14 @@ namespace adonet_db_videogame
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    if (ex.Message.Contains("software_houses"))
+                        Console.WriteLine("Invalid software house ID.");
                 }
 
                 return insertedRows > 0;
             }
         }
-        public static bool GetVideogameById(long videogameId, out Videogame? videogame)
+        public static bool FindVideogameById(long videogameId, out Videogame? videogame)
         {
             videogame = null;
 
@@ -77,6 +78,44 @@ namespace adonet_db_videogame
             }
             return videogame is not null;
         }
+        public static List<Videogame> FindVideogamesByName(string videogameName)
+        {
+            List<Videogame> videogames = new List<Videogame>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    string query = "SELECT id, name, overview, release_date, software_house_id FROM videogames WHERE name LIKE @Name;";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.Add(new SqlParameter("@Name", $"%{videogameName}%"));
+                        using (SqlDataReader data = cmd.ExecuteReader())
+                        {
+                            while (data.Read())
+                            {
+                                long id = data.GetInt64(0);
+                                string name = data.GetString(1);
+                                string overview = data.GetString(2);
+                                DateTime releaseDate = data.GetDateTime(3);
+                                long softwareHouseId = data.GetInt64(4);
+ 
+                                videogames.Add(new Videogame(id, name, overview, releaseDate, softwareHouseId));
+                            }
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            return videogames;
+        }
         public static bool DeleteVideogame(long id)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -97,7 +136,7 @@ namespace adonet_db_videogame
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    
                 }
 
                 return deletedRows > 0;

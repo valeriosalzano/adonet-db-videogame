@@ -34,8 +34,10 @@ namespace adonet_db_videogame
                         FindVideogameById();
                         break;
                     case "3":
+                        FindVideogameByName();
                         break;
                     case "4":
+                        DeleteVideogame();
                         break;
                     case "0":
                         Console.WriteLine("Goodbye!");
@@ -54,15 +56,15 @@ namespace adonet_db_videogame
         {
             Console.WriteLine("\n--- Inserting a new videogame ---\n");
 
-            Console.WriteLine("Enter the videogame name: ");
+            Console.Write("Enter the videogame name: ");
             string videogameName = GetValidStringFromUser();
 
             string videogameOverview = GetOptionalParameterFromUser("overview");
 
-            Console.WriteLine("Enter the videogame release date (dd/mm/yyyy): ");
+            Console.Write("Enter the videogame release date (dd/mm/yyyy): ");
             DateTime videogameReleaseDate = GetValidDateFromUser();
 
-            Console.WriteLine("Enter the software house id :");
+            Console.Write("Enter the software house id :");
             int videogameSHId = GetValidPositiveIntegerFromUser();
 
             Videogame newVideogame = new Videogame(0, videogameName, videogameOverview, videogameReleaseDate, videogameSHId);
@@ -77,12 +79,41 @@ namespace adonet_db_videogame
 
             Console.WriteLine("\n--- Finding a videogame by ID ---\n");
 
-            Console.WriteLine("Enter the videogame ID: ");
+            Console.Write("Enter the videogame ID: ");
             int videogameId = GetValidPositiveIntegerFromUser();
 
-            bool found = VideogameManager.GetVideogameById(videogameId, out Videogame? foundVideogame);
+            bool found = VideogameManager.FindVideogameById(videogameId, out Videogame? foundVideogame);
 
-            Console.WriteLine(found ? "Videogame found! "+foundVideogame.ToString() : "Videogame non trovato!");
+            Console.WriteLine(found ? ("Videogame found! " + foundVideogame) : "Videogame not found.");
+
+        }
+        public static void FindVideogameByName()
+        {
+
+            Console.WriteLine("\n--- Finding a videogame by Name ---\n");
+
+            Console.Write("Enter the videogame name: ");
+            string videogameName = GetValidStringFromUser();
+
+            List<Videogame> foundVideogames = VideogameManager.FindVideogamesByName(videogameName);
+
+            if (foundVideogames.Count() > 0)
+                foreach (Videogame videogame in foundVideogames)
+                    Console.WriteLine($"- {videogame}");
+            else
+                Console.WriteLine("Videogame not found.");
+        }
+        public static void DeleteVideogame()
+        {
+            Console.WriteLine("\n--- Deleting a videogame by ID ---\n");
+
+            Console.Write("Enter the videogame ID: ");
+            int videogameId = GetValidPositiveIntegerFromUser();
+
+            bool found = VideogameManager.DeleteVideogame(videogameId);
+
+            Console.WriteLine(found ? ("Success! Videogame deleted") : "Error! Videogame not found.");
+
         }
         // USER INPUT FUNCTIONS
         public static string GetValidStringFromUser()
