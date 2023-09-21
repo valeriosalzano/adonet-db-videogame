@@ -64,13 +64,23 @@ namespace adonet_db_videogame
             Console.Write("Enter the videogame release date (dd/mm/yyyy): ");
             DateTime videogameReleaseDate = GetValidDateFromUser();
 
-            Console.Write("Enter the software house id :");
+            Console.Write("Enter the software house id: ");
             int videogameSHId = GetValidPositiveIntegerFromUser();
 
-            Videogame newVideogame = new Videogame(0, videogameName, videogameOverview, videogameReleaseDate, videogameSHId);
+            bool inserted;
+            try
+            {
+                Videogame newVideogame = new Videogame(0, videogameName, videogameOverview, videogameReleaseDate, videogameSHId);
+                inserted = VideogameManager.InsertVideogame(newVideogame);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                inserted = false;
+            }
             
-            bool inserted = VideogameManager.InsertVideogame(newVideogame);
-            Console.WriteLine(inserted ? "Success!" : "Something went wrong");
+            
+            Console.WriteLine(inserted ? "Success!" : "Error! Something went wrong.");
 
         }
 
@@ -151,7 +161,7 @@ namespace adonet_db_videogame
             while (looping)
             {
                 string userChoice = "";
-                Console.Write($"Do you want to set a {parameterName} ?(y/n)");
+                Console.Write($"Do you want to set the {parameterName}? (y/n) ");
                 userChoice = GetValidStringFromUser().ToLower();
 
                 if (userChoice == "y")
