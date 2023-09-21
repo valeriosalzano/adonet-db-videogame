@@ -26,7 +26,7 @@ namespace adonet_db_videogame
 
         public override string ToString()
         {
-            return $"ID: {Id}, {Name} - released on {ReleaseDate} by SH ID: {SoftwareHouseId}.";
+            return $"ID: {Id}, {Name} - released on {ReleaseDate.ToString("dd/MM/yyyy")} by SH ID: {SoftwareHouseId}.";
         }
     }
 }

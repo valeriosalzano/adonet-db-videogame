@@ -40,7 +40,7 @@ namespace adonet_db_videogame
                 return insertedRows > 0;
             }
         }
-        public static bool GetVideogameById(string videogameId, out Videogame? videogame)
+        public static bool GetVideogameById(long videogameId, out Videogame? videogame)
         {
             videogame = null;
 

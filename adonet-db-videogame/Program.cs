@@ -31,13 +31,14 @@ namespace adonet_db_videogame
                         InsertVideogame();
                         break;
                     case "2":
+                        FindVideogameById();
                         break;
                     case "3":
                         break;
                     case "4":
                         break;
                     case "0":
-                        Console.WriteLine("\n Goodbye! \n");
+                        Console.WriteLine("Goodbye!");
                         break;
                     default:
                         Console.WriteLine("Invalid key.");
@@ -49,7 +50,7 @@ namespace adonet_db_videogame
             Console.WriteLine("\n --- Program END --- \n");
         }
 
-        public static bool InsertVideogame()
+        public static void InsertVideogame()
         {
             Console.WriteLine("\n--- Inserting a new videogame ---\n");
 
@@ -69,9 +70,20 @@ namespace adonet_db_videogame
             bool inserted = VideogameManager.InsertVideogame(newVideogame);
             Console.WriteLine(inserted ? "Success!" : "Something went wrong");
 
-            return inserted;
         }
 
+        public static void FindVideogameById()
+        {
+
+            Console.WriteLine("\n--- Finding a videogame by ID ---\n");
+
+            Console.WriteLine("Enter the videogame ID: ");
+            int videogameId = GetValidPositiveIntegerFromUser();
+
+            bool found = VideogameManager.GetVideogameById(videogameId, out Videogame? foundVideogame);
+
+            Console.WriteLine(found ? "Videogame found! "+foundVideogame.ToString() : "Videogame non trovato!");
+        }
         // USER INPUT FUNCTIONS
         public static string GetValidStringFromUser()
         {
